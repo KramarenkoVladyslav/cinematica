@@ -3,6 +3,7 @@ max-line-length = 91
 extend-ignore = E203, W503
 exclude = 
     .git,
+    */migrations/*,
     __pycache__,
     build,
     dist,

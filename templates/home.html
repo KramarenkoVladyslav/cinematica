@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="max-w-xl mx-auto mt-16 text-center space-y-6">
+
+    <h1 class="text-4xl font-bold text-gray-800">🎬 Welcome to Cinematica!</h1>
+
+    {% if user.is_authenticated %}
+    <p class="text-lg text-gray-700">Welcome, {{ user.username }}! Check out our movie selection below.</p>
+    <a href="/movies/" class="inline-block px-5 py-3 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition">Explore</a>
+    {% else %}
+        <p class="text-lg text-gray-700">You are not logged in yet. Please log in or sign up to browse our movie collection.</p>
+        <a href="{% url 'login' %}" class="inline-block px-5 py-3 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition">Login</a>
+        <a href="{% url 'signup' %}" class="inline-block px-5 py-3 bg-green-500 text-white rounded-lg shadow hover:bg-green-600 transition">Sign Up</a>
+    {% endif %}
+
+</div>
+{% endblock %}
