@@ -2,28 +2,33 @@
 {% load widget_tweaks %}
 
 {% block title %}Login{% endblock %}
+{% block center_content %}justify-center items-center{% endblock %}
 
 {% block content %}
-<div class="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow space-y-6">
-<form method="post" class="space-y-4">
-    {% csrf_token %}
-    <div>
-        <label for="{{ form.username.id_for_label }}" class="block mb-1 font-medium text-gray-700">Username</label>
-        {{ form.username|add_class:"w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400" }}
-        {% if form.username.errors %}
-            <div class="text-red-500 text-sm mt-1">{{ form.username.errors }}</div>
-        {% endif %}
-    </div>
+{% with center_content=True %}
+<div class="w-full max-w-md p-10 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-xl shadow-2xl space-y-8 border border-gray-700/50 backdrop-blur">
+    <h1 class="text-4xl font-extrabold text-white text-center tracking-wider drop-shadow-lg">Sign In</h1>
+    <form method="post" class="space-y-6">
+        {% csrf_token %}
+        <div>
+            <label for="{{ form.username.id_for_label }}" class="block mb-1 text-sm font-semibold text-gray-300">Username</label>
+            {{ form.username|add_class:"w-full px-4 py-3 border border-gray-600 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600" }}
+            {% if form.username.errors %}
+                <div class="text-red-500 text-sm mt-1">{{ form.username.errors }}</div>
+            {% endif %}
+        </div>
 
-    <div>
-        <label for="{{ form.password.id_for_label }}" class="block mb-1 font-medium text-gray-700">Password</label>
-        {{ form.password|add_class:"w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400" }}
-        {% if form.password.errors %}
-            <div class="text-red-500 text-sm mt-1">{{ form.password.errors }}</div>
-        {% endif %}
-    </div>
+        <div>
+            <label for="{{ form.password.id_for_label }}" class="block mb-1 text-sm font-semibold text-gray-300">Password</label>
+            {{ form.password|add_class:"w-full px-4 py-3 border border-gray-600 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600" }}
+            {% if form.password.errors %}
+                <div class="text-red-500 text-sm mt-1">{{ form.password.errors }}</div>
+            {% endif %}
+        </div>
 
-    <button type="submit" class="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Login</button>
-</form>
-
+        <button type="submit" class="w-full px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white text-lg font-bold rounded-lg shadow-lg hover:from-red-700 hover:to-red-800 transition transform hover:scale-105">Sign In</button>
+    </form>
+</div>
+{% endwith %}
 {% endblock %}
+
