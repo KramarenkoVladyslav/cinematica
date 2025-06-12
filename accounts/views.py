@@ -4,7 +4,7 @@ from .forms import SignupForm
 from django.contrib.auth.decorators import login_required
 from movies.models import Movie
 from .models import WatchlistItem
-
+from django.contrib import messages
 
 def home(request):
     return render(request, "home.html")
@@ -31,14 +31,16 @@ def signup(request):
 def add_to_watchlist(request, movie_id):
     movie = get_object_or_404(Movie, id=movie_id)
     WatchlistItem.objects.get_or_create(user=request.user, movie=movie)
-    return redirect("watchlist")
+    messages.success(request, f"{movie.title} has been added to your watchlist.")
+    return redirect('movie_detail', movie_id=movie.id)
 
 
 @login_required
 def remove_from_watchlist(request, movie_id):
     movie = get_object_or_404(Movie, id=movie_id)
     WatchlistItem.objects.filter(user=request.user, movie=movie).delete()
-    return redirect("watchlist")
+    messages.error(request, f"{movie.title} has been removed from your watchlist.")
+    return redirect("movie_detail", movie_id=movie.id)
 
 
 @login_required

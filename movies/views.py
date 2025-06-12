@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from .models import Movie, Genre, Category
 from reviews.models import Review
 from reviews.forms import ReviewForm
+from accounts.models import WatchlistItem
 
 
 def filter_movies_by_genre(movies, genre_id):
@@ -83,9 +84,10 @@ def movie_detail(request, movie_id):
         .order_by("-created_at")
     )
     form = ReviewForm()
+    watchlist_items = WatchlistItem.objects.filter(user=request.user).values_list('movie_id', flat=True)
 
     return render(
         request,
         "movies/movie_detail.html",
-        {"movie": movie, "reviews": reviews, "form": form},
+        {"movie": movie, "reviews": reviews, "watchlist_items": watchlist_items, "form": form},
     )

@@ -25,10 +25,18 @@
 
             <div class="flex flex-col md:flex-row items-start space-y-2 md:space-y-0 md:space-x-4 mt-4">
                 <a href="{{ movie.trailer_url }}" target="_blank" class="inline-block max-w-xs px-4 py-2 md:px-6 md:py-3 bg-red-600 text-white text-lg rounded-lg shadow-lg hover:bg-red-700 transition transform hover:scale-105">Watch Trailer</a>
-                <form method="post" action="{% url 'add_to_watchlist' movie.id %}">
-                    {% csrf_token %}
-                    <button type="submit" class="inline-block max-w-xs px-4 py-2 md:px-6 md:py-3 bg-gray-700 text-white text-lg rounded-lg shadow-lg hover:bg-gray-600 transition transform hover:scale-105">Add to Watchlist</button>
-                </form>
+                
+                {% if movie.id in watchlist_items %}
+                    <form method="post" action="{% url 'remove_from_watchlist' movie.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="inline-block max-w-xs px-4 py-2 md:px-6 md:py-3 bg-gray-700 text-white text-lg rounded-lg shadow-lg hover:bg-gray-600 transition transform hover:scale-105">Remove from Watchlist</button>
+                    </form>
+                {% else %}
+                    <form method="post" action="{% url 'add_to_watchlist' movie.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="inline-block max-w-xs px-4 py-2 md:px-6 md:py-3 bg-gray-700 text-white text-lg rounded-lg shadow-lg hover:bg-gray-600 transition transform hover:scale-105">Add to Watchlist</button>
+                    </form>
+                {% endif %}
             </div>
         </div>
     </div>
