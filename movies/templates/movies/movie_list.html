@@ -12,7 +12,7 @@
     </button>
     
     <!-- Filters Form -->
-    <form method="get" class="mb-8" id="filters" style="display: none;">
+    <form method="get" class="mb-8" id="filters" hx-get="{% url 'movie_list' %}" hx-target="#movie-list">
         <div class="flex flex-col md:flex-row md:items-end md:space-x-4 space-y-4 md:space-y-0">
             <!-- Genre -->
             <div class="flex-1">
@@ -57,6 +57,10 @@
                     {% endfor %}
                 </select>
             </div>
+             <!-- Clear Filters Button -->
+            <button type="button" id="clear-filters" class="mt-4 px-3 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition">
+                Clear
+            </button>
         </div>
     </form>
 
@@ -90,33 +94,41 @@
             }
         });
 
-        // Add event listeners to each select element
         document.querySelectorAll('#filters select').forEach(function(select) {
             select.addEventListener('change', function() {
                 document.getElementById('filters').submit();
             });
         });
+
+        document.getElementById('clear-filters').addEventListener('click', function() {
+            document.querySelectorAll('#filters select').forEach(function(select) {
+                select.selectedIndex = 0; 
+            });
+            document.getElementById('filters').submit(); 
+        });
     </script>
 
-    {% if movies %}
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-        {% for movie in movies %}
-            <div class="group relative bg-gray-900 rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition duration-300">
-                <img src="{{ movie.poster.url }}" alt="{{ movie.title }}" class="w-full h-64 object-cover object-top group-hover:opacity-80 transition">
-                <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-80"></div>
-                <div class="absolute bottom-0 p-4 z-10">
-                    <h2 class="text-lg font-extrabold text-white max-w-xl break-words">{{ movie.title }}</h2>
-                    <p class="text-xs text-gray-400 pt-[0px]">{{ movie.year }} • {{ movie.country }} • {{ movie.get_duration_in_hours_and_minutes }}</p>
-                    <a href="{% url 'movie_detail' movie.id %}" class="inline-block mt-2 px-3 py-1 bg-red-600 text-white text-xs font-medium rounded hover:bg-red-700 transition">
-                        View Details →
-                    </a>
+    <div id="movie-list">
+        {% if movies %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            {% for movie in movies %}
+                <div class="group relative bg-gray-900 rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition duration-300">
+                    <img src="{{ movie.poster.url }}" alt="{{ movie.title }}" class="w-full h-64 object-cover object-top group-hover:opacity-80 transition">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-80"></div>
+                    <div class="absolute bottom-0 p-4 z-10">
+                        <h2 class="text-lg font-extrabold text-white max-w-xl break-words">{{ movie.title }}</h2>
+                        <p class="text-xs text-gray-400 pt-[0px]">{{ movie.year }} • {{ movie.country }} • {{ movie.get_duration_in_hours_and_minutes }}</p>
+                        <a href="{% url 'movie_detail' movie.id %}" class="inline-block mt-2 px-3 py-1 bg-red-600 text-white text-xs font-medium rounded hover:bg-red-700 transition">
+                            View Details →
+                        </a>
+                    </div>
                 </div>
-            </div>
-        {% endfor %}
+            {% endfor %}
+        </div>
+        {% else %}
+            <p class="text-gray-400">No movies available at the moment.</p>
+        {% endif %}
     </div>
-    {% else %}
-        <p class="text-gray-400">No movies available at the moment.</p>
-    {% endif %}
 </div>
 
 {% endblock %}
