@@ -1,6 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login
 from .forms import SignupForm
+from django.contrib.auth.decorators import login_required
+from movies.models import Movie
+from .models import WatchlistItem
 
 
 def home(request):
@@ -22,3 +25,26 @@ def signup(request):
         form = SignupForm()
 
     return render(request, "accounts/signup.html", {"form": form})
+
+
+@login_required
+def add_to_watchlist(request, movie_id):
+    movie = get_object_or_404(Movie, id=movie_id)
+    WatchlistItem.objects.get_or_create(user=request.user, movie=movie)
+    return redirect("watchlist")
+
+
+@login_required
+def remove_from_watchlist(request, movie_id):
+    movie = get_object_or_404(Movie, id=movie_id)
+    WatchlistItem.objects.filter(user=request.user, movie=movie).delete()
+    return redirect("watchlist")
+
+
+@login_required
+def watchlist(request):
+    watchlist_items = WatchlistItem.objects.filter(user=request.user)
+    return render(
+        request, "accounts/watchlist.html", {"watchlist_items": watchlist_items}
+    )
+

@@ -11,4 +11,16 @@ urlpatterns = [
         name="login",
     ),
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),
+    # Watchlist
+    path("watchlist/", views.watchlist, name="watchlist"),
+    path(
+        "add_to_watchlist/<int:movie_id>/",
+        views.add_to_watchlist,
+        name="add_to_watchlist",
+    ),
+    path(
+        "remove_from_watchlist/<int:movie_id>/",
+        views.remove_from_watchlist,
+        name="remove_from_watchlist",
+    ),
 ]

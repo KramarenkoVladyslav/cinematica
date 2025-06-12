@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}My Watchlist{% endblock %}
+{% block center_content %}justify-center items-center{% endblock %}
+
+{% block content %}
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {% for item in watchlist_items %}
+                <div class="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+                    <img src="{{ item.movie.poster.url }}" alt="{{ item.movie.title }}" class="w-full h-64 object-cover">
+                    <div class="p-4">
+                        <h2 class="text-xl font-semibold text-white">
+                            <a href="{% url 'movie_detail' item.movie.id %}" class="hover:underline">{{ item.movie.title }}</a>
+                        </h2>
+                        <a href="{% url 'remove_from_watchlist' item.movie.id %}" class="text-red-600 hover:text-red-400 mt-2 inline-block">Remove</a>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-span-full text-center text-gray-400">
+                    No movies in your watchlist yet.
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

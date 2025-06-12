@@ -10,25 +10,29 @@
         <div class="absolute inset-0 bg-gradient-to-r from-gray-900 via-gray-900/80 to-transparent"></div>
     </div>
 
-    <div class="relative z-10 flex items-center justify-start h-full px-12">
-        <div class="max-w-xl space-y-6 text-left mb-[100px]">
-            <h1 class="text-6xl font-extrabold text-white leading-tight">{{ movie.title }}</h1>
-            <p class="text-sm text-gray-400">{{ movie.year }} • {{ movie.country }} • {{ movie.get_duration_in_hours_and_minutes }} </p>
+    
+
+    <div class="relative z-10 flex items-center justify-start h-full px-4 md:px-12">
+        <div class="max-w-xl space-y-6 text-left mb-24 md:mb-[100px]">
+            <h1 class="text-4xl md:text-6xl font-extrabold text-white leading-tight">{{ movie.title }}</h1>
+            <p class="text-xs md:text-sm text-gray-400">{{ movie.year }} • {{ movie.country }} • {{ movie.get_duration_in_hours_and_minutes }} </p>
             <div class="flex flex-wrap gap-2 mt-4">
                 {% for genre in movie.genres.all %}
-                    <span class="px-3 py-1 bg-gray-700 text-white text-xs font-semibold rounded-full">{{ genre.name }}</span>
+                    <span class="px-2 py-1 bg-gray-700 text-white text-xs font-semibold rounded-full">{{ genre.name }}</span>
                 {% endfor %}
             </div>
-            <p class="text-md text-gray-300 max-w-xl break-words">
+            <p class="text-sm md:text-md text-gray-300 max-w-xl break-words">
                 {{ movie.description }}
             </p>
 
-            <div class="flex space-x-4 mt-4">
-                <a href="{{ movie.trailer_url }}" target="_blank" class="px-6 py-3 bg-red-600 text-white text-lg rounded-lg shadow-lg hover:bg-red-700 transition transform hover:scale-105">▶ Watch Trailer</a>
-                <button class="px-6 py-3 bg-gray-700 text-white text-lg rounded-lg shadow-lg hover:bg-gray-600 transition transform hover:scale-105">Add to Watchlist</button>
+            <div class="flex flex-col md:flex-row items-start space-y-2 md:space-y-0 md:space-x-4 mt-4">
+                <a href="{{ movie.trailer_url }}" target="_blank" class="inline-block max-w-xs px-4 py-2 md:px-6 md:py-3 bg-red-600 text-white text-lg rounded-lg shadow-lg hover:bg-red-700 transition transform hover:scale-105">Watch Trailer</a>
+                <form method="post" action="{% url 'add_to_watchlist' movie.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="inline-block max-w-xs px-4 py-2 md:px-6 md:py-3 bg-gray-700 text-white text-lg rounded-lg shadow-lg hover:bg-gray-600 transition transform hover:scale-105">Add to Watchlist</button>
+                </form>
             </div>
         </div>
     </div>
 </div>
 {% endblock %}
-
