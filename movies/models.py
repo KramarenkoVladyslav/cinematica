@@ -3,14 +3,14 @@ from django.core.validators import MinValueValidator
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=100, blank=False, null=False)
+    name = models.CharField(max_length=100, blank=False, null=False, unique=True)
 
     def __str__(self):
         return self.name
 
 
 class Genre(models.Model):
-    name = models.CharField(max_length=100, blank=False, null=False)
+    name = models.CharField(max_length=100, blank=False, null=False, unique=True)
 
     def __str__(self):
         return self.name
@@ -25,7 +25,7 @@ class Movie(models.Model):
     poster = models.ImageField(upload_to="movies/", blank=False, null=False)
     trailer_url = models.URLField(blank=False, null=False)
     category = models.ForeignKey(
-        Category, on_delete=models.CASCADE, blank=False, null=False
+        Category, on_delete=models.CASCADE, blank=True, null=True
     )
     genres = models.ManyToManyField(Genre, related_name="movies")
 
