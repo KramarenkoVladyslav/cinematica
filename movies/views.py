@@ -84,10 +84,17 @@ def movie_detail(request, movie_id):
         .order_by("-created_at")
     )
     form = ReviewForm()
-    watchlist_items = WatchlistItem.objects.filter(user=request.user).values_list('movie_id', flat=True)
+    watchlist_items = WatchlistItem.objects.filter(user=request.user).values_list(
+        "movie_id", flat=True
+    )
 
     return render(
         request,
         "movies/movie_detail.html",
-        {"movie": movie, "reviews": reviews, "watchlist_items": watchlist_items, "form": form},
+        {
+            "movie": movie,
+            "reviews": reviews,
+            "watchlist_items": watchlist_items,
+            "form": form,
+        },
     )
