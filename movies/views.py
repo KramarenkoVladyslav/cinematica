@@ -18,9 +18,26 @@ def filter_movies_by_category(movies, category_id):
         return movies
 
 
+def filter_movies_by_country(movies, country):
+    try:
+        return movies.filter(country=country)
+    except (ValueError, TypeError):
+        return movies
+    
+
+def filter_movies_by_year(movies, year):
+    try:
+        year = int(year)
+        return movies.filter(year=year)
+    except (ValueError, TypeError):
+        return movies
+
+
 def movie_list(request):
     genre_id = request.GET.get("genre")
     category_id = request.GET.get("category")
+    country = request.GET.get("country")
+    year = request.GET.get("year")
 
     movies = Movie.objects.all()
 
@@ -30,15 +47,29 @@ def movie_list(request):
     if category_id:
         movies = filter_movies_by_category(movies, category_id)
 
+    if country:
+        movies = filter_movies_by_country(movies, country)
+
+    if year:
+        movies = filter_movies_by_year(movies, year)
+
     movies = movies.distinct()
 
     genres = Genre.objects.all()
     categories = Category.objects.all()
+    years = Movie.objects.values_list('year', flat=True).distinct()
+    countries = Movie.objects.values_list('country', flat=True).distinct()
 
     return render(
         request,
         "movies/movie_list.html",
-        {"movies": movies, "genres": genres, "categories": categories},
+        {
+            "movies": movies,
+            "genres": genres,
+            "categories": categories,
+            "years": years,
+            "countries": countries,
+        },
     )
 
 
