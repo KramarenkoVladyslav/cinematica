@@ -43,8 +43,9 @@ def remove_from_watchlist(request, movie_id):
 
 @login_required
 def watchlist(request):
-    watchlist_items = WatchlistItem.objects.filter(user=request.user).select_related("movie")
+    watchlist_items = WatchlistItem.objects.filter(user=request.user).select_related(
+        "movie"
+    )
     return render(
         request, "accounts/watchlist.html", {"watchlist_items": watchlist_items}
     )
-

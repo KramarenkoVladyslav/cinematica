@@ -23,7 +23,7 @@ def filter_movies_by_country(movies, country):
         return movies.filter(country=country)
     except (ValueError, TypeError):
         return movies
-    
+
 
 def filter_movies_by_year(movies, year):
     try:
@@ -57,8 +57,8 @@ def movie_list(request):
 
     genres = Genre.objects.all()
     categories = Category.objects.all()
-    years = Movie.objects.values_list('year', flat=True).distinct()
-    countries = Movie.objects.values_list('country', flat=True).distinct()
+    years = Movie.objects.values_list("year", flat=True).distinct()
+    countries = Movie.objects.values_list("country", flat=True).distinct()
 
     return render(
         request,
