@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
 {% block title %}My Watchlist{% endblock %}
-{% block center_content %}justify-center items-center{% endblock %}
 
 {% block content %}
     <div class="container mx-auto px-4">
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <h1 class="text-4xl mt-[50px] font-extrabold text-white text-center tracking-wider drop-shadow-lg mb-8">My Watchlist</h1>
+        <div class="mt-[50px] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {% for item in watchlist_items %}
                 <div class="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
                     <img src="{{ item.movie.poster.url }}" alt="{{ item.movie.title }}" class="w-full h-64 object-cover object-top">

@@ -57,11 +57,6 @@
                     {% endfor %}
                 </select>
             </div>
-    
-            <!-- Filter button -->
-            <div class="md:w-auto">
-                <button type="submit" class="w-full md:w-auto px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Apply</button>
-            </div>
         </div>
     </form>
 
@@ -93,6 +88,13 @@
             } else {
                 filters.style.display = 'none';
             }
+        });
+
+        // Add event listeners to each select element
+        document.querySelectorAll('#filters select').forEach(function(select) {
+            select.addEventListener('change', function() {
+                document.getElementById('filters').submit();
+            });
         });
     </script>
 
