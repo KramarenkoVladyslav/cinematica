@@ -27,6 +27,7 @@ def submit_review(request, movie_id):
                 rating=form.cleaned_data["rating"],
                 review_text=form.cleaned_data["review_text"],
             )
+            messages.success(request, "Your comment has been successfully added.")
     return redirect("movie_detail", movie_id=movie.id)
 
 
@@ -39,5 +40,6 @@ def delete_review(request, review_id):
 
     if request.method == "POST":
         review.delete()
+        messages.success(request, "Your comment has been successfully deleted.")
 
     return redirect("movie_detail", movie_id=review.movie.id)
