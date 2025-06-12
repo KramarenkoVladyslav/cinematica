@@ -13,7 +13,10 @@
                         <h2 class="text-xl font-semibold text-white">
                             <a href="{% url 'movie_detail' item.movie.id %}" class="hover:underline">{{ item.movie.title }}</a>
                         </h2>
-                        <a href="{% url 'remove_from_watchlist' item.movie.id %}" class="text-red-600 hover:text-red-400 mt-2 inline-block">Remove</a>
+                        <form action="{% url 'remove_from_watchlist' item.movie.id %}" method="post" class="mt-2">
+                            {% csrf_token %}
+                            <button type="submit" class="text-red-600 hover:text-red-400 inline-block">Remove</button>
+                        </form>
                     </div>
                 </div>
             {% empty %}

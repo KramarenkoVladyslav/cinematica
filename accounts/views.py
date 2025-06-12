@@ -11,15 +11,15 @@ def home(request):
 
 
 def signup(request):
-    try:
-        if request.method == "POST":
+    if request.method == "POST":
+        try:
             form = SignupForm(request.POST)
             if form.is_valid():
                 user = form.save()
                 login(request, user)
                 return redirect("home")
-    except Exception as e:
-        print(e)
+        except Exception as e:
+            print(e)
 
     else:
         form = SignupForm()
@@ -43,7 +43,7 @@ def remove_from_watchlist(request, movie_id):
 
 @login_required
 def watchlist(request):
-    watchlist_items = WatchlistItem.objects.filter(user=request.user)
+    watchlist_items = WatchlistItem.objects.filter(user=request.user).select_related("movie")
     return render(
         request, "accounts/watchlist.html", {"watchlist_items": watchlist_items}
     )

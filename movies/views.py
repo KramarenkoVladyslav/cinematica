@@ -9,12 +9,14 @@ def filter_movies_by_genre(movies, genre_id):
     except (ValueError, TypeError):
         return movies
 
+
 def filter_movies_by_category(movies, category_id):
     try:
         category_id = int(category_id)
         return movies.filter(category__id=category_id)
     except (ValueError, TypeError):
         return movies
+
 
 def movie_list(request):
     genre_id = request.GET.get("genre")
