@@ -1,5 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Movie, Genre, Category
+from reviews.models import Review
+from reviews.forms import ReviewForm
 
 
 def filter_movies_by_genre(movies, genre_id):
@@ -75,4 +77,15 @@ def movie_list(request):
 
 def movie_detail(request, movie_id):
     movie = get_object_or_404(Movie, id=movie_id)
-    return render(request, "movies/movie_detail.html", {"movie": movie})
+    reviews = (
+        Review.objects.filter(movie=movie)
+        .select_related("user")
+        .order_by("-created_at")
+    )
+    form = ReviewForm()
+
+    return render(
+        request,
+        "movies/movie_detail.html",
+        {"movie": movie, "reviews": reviews, "form": form},
+    )
