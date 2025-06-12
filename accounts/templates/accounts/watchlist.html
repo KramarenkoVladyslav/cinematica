@@ -8,7 +8,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {% for item in watchlist_items %}
                 <div class="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-                    <img src="{{ item.movie.poster.url }}" alt="{{ item.movie.title }}" class="w-full h-64 object-cover">
+                    <img src="{{ item.movie.poster.url }}" alt="{{ item.movie.title }}" class="w-full h-64 object-cover object-top">
                     <div class="p-4">
                         <h2 class="text-xl font-semibold text-white">
                             <a href="{% url 'movie_detail' item.movie.id %}" class="hover:underline">{{ item.movie.title }}</a>
