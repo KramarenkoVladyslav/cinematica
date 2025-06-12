@@ -33,67 +33,7 @@
         </div>
     </div>
 </div>
-<div class="reviews-section bg-black pt-[80px] pb-[50px] px-8">
-    <h1 class="text-4xl font-extrabold text-white mb-[50px] text-center">Reviews</h1>
-    <form method="post" action="{% url 'submit_review' movie.id %}" class="mb-10 bg-gray-950 p-6 rounded-xl shadow-lg space-y-4 border border-gray-800">
-        {% csrf_token %}
-        <label class="block text-sm text-gray-300 font-semibold">Rating</label>
-        <select name="rating" required class="bg-gray-900 text-white border border-gray-700 focus:border-red-600 rounded p-2 w-24">
-            <option value="5">5</option>
-            <option value="4">4</option>
-            <option value="3">3</option>
-            <option value="2">2</option>
-            <option value="1">1</option>
-        </select>
-    
-        <label class="block text-sm text-gray-300 font-semibold">Your Review</label>
-        <textarea name="review_text" rows="3" required class="bg-gray-900 text-white border border-gray-700 focus:border-red-600 w-full rounded p-2 h-[200px] md:h-auto" placeholder="Share your thoughts..."></textarea>
-    
-        <button type="submit" class="bg-red-600 text-white px-6 py-2 rounded-lg shadow-lg hover:bg-red-700 transition transform hover:scale-105">Submit</button>
-    </form>
 
-    <div class="reviews-list space-y-6">
-        {% for review in reviews %}
-        <div class="review-item bg-gray-950 p-6 rounded-2xl shadow-2xl border border-gray-800 transition-transform hover:scale-[1.02] hover:bg-gray-900 duration-300 flex flex-col md:grid md:grid-cols-[minmax(0,1fr)_auto] md:gap-10 space-y-4 md:space-y-0">
+{% include "reviews/reviews.html" %}
 
-            <div class="flex items-start space-x-4 w-100">
-                <div class="w-14 h-14 bg-red-600 text-white rounded-full flex items-center justify-center text-lg font-bold flex-shrink-0">
-                    {{ review.user.username|first|upper }}
-                </div>
-                <div class="space-y-2 w-full">
-                    <div class="flex items-center space-x-2 flex-wrap">
-                        <span class="text-base text-gray-200 font-semibold">{{ review.user.username }}</span>
-                        <span class="text-xs text-gray-500">{{ review.created_at|date:"M d, Y" }}</span>
-                    </div>
-                    <p class="text-md text-gray-300 leading-relaxed border-l-4 border-red-600 pl-4 break-words whitespace-normal" style="overflow-wrap: anywhere;">
-                        {{ review.review_text }}
-                    </p>                    
-                </div>
-            </div>
-        
-            <div class="flex flex-row md:flex-col items-end justify-end md:justify-between space-x-2 md:space-x-0 md:space-y-2 mt-4 md:mt-0 flex-shrink-0">
-                <div class="flex justify-end space-x-1 ml-[50px]">
-                    {% for i in "12345"|make_list %}
-                        {% if forloop.counter <= review.rating %}
-                            <span class="text-yellow-400 text-2xl md:text-3xl">★</span>
-                        {% else %}
-                            <span class="text-gray-700 text-2xl md:text-3xl">★</span>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-                {% if review.user == user %}
-                <form method="post" action="{% url 'delete_review' review.id %}">
-                    {% csrf_token %}
-                    <button type="submit" class="text-red-600 text-sm px-3 py-1 md:mt-2 hover:text-red-700 transition">
-                        Delete
-                    </button>
-                </form>
-                {% endif %}
-            </div>
-        </div>  
-        {% empty %}
-            <p class="text-gray-400 text-center">No reviews yet. Be the first to review!</p>
-        {% endfor %}
-    </div>
-</div>
 {% endblock %}
