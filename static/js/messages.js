@@ -1,4 +1,4 @@
-// Function to hide messages after 5 seconds
+// Function to hide messages after 3 seconds
 setTimeout(() => {
     const messages = document.querySelectorAll('.messages li');
     messages.forEach(message => {
