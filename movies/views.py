@@ -42,7 +42,7 @@ def movie_list(request):
     country = request.GET.get("country")
     year = request.GET.get("year")
 
-    movies = Movie.objects.all()
+    movies = Movie.objects.all().select_related("category").prefetch_related("genres")
 
     if genre_id:
         movies = filter_movies_by_genre(movies, genre_id)
