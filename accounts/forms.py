@@ -6,14 +6,15 @@ from django.core.validators import RegexValidator
 
 class SignupForm(UserCreationForm):
     email = forms.EmailField(
-        required=True,
-        label="Email",
-        max_length=255,
-        help_text="Required.",
+        required=True, label="Email", max_length=255, help_text="Required."
+    )
+
+    username = forms.CharField(
+        max_length=150,
         validators=[
             RegexValidator(
-                regex=r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$',
-                message='Enter a valid email address.',
+                regex=r"^[a-zA-Z0-9_.+-]{2,}$",
+                message="Username must contain at least two characters.",
             )
         ],
     )
