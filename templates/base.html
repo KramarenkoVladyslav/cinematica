@@ -8,18 +8,9 @@
     <script src="https://unpkg.com/htmx.org@1.6.1"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-
-        .logo {
-            width: 135px;
-            height: auto; /* Maintains aspect ratio */
-        }
-    </style>
     {% block head %}{% endblock %}
     {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body class="min-h-screen flex flex-col bg-gray-900 text-gray-100">
 
