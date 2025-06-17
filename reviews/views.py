@@ -15,9 +15,11 @@ def submit_review(request, movie_id):
         form = ReviewForm(request.POST)
         if form.is_valid():
             with transaction.atomic():
-                existing_review = Review.objects.select_for_update().filter(
-                    user=request.user, movie=movie
-                ).first()
+                existing_review = (
+                    Review.objects.select_for_update()
+                    .filter(user=request.user, movie=movie)
+                    .first()
+                )
 
                 if existing_review:
                     messages.error(
