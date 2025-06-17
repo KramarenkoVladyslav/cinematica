@@ -1,6 +1,8 @@
-from django.urls import path
+from django.urls import include,path
 from . import views
 from django.contrib.auth import views as auth_views
+from django.conf import settings
+import debug_toolbar
 
 urlpatterns = [
     path("", views.home, name="home"),
@@ -24,3 +26,9 @@ urlpatterns = [
         name="remove_from_watchlist",
     ),
 ]
+
+if settings.DEBUG:
+
+       urlpatterns = [
+           path("__debug__/", include(debug_toolbar.urls)),
+       ] + urlpatterns
