@@ -67,9 +67,9 @@
 
     <div id="movie-list">
         {% if movies %}
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7 gap-4">
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7 gap-4 justify-items-start">
             {% for movie in movies %}
-            <div class="relative bg-gray-900 rounded-lg overflow-hidden shadow-lg group transform hover:scale-105 transition h-[270px] w-full max-w-[180px] mx-auto">
+            <div class="relative bg-gray-900 rounded-lg overflow-hidden shadow-lg group transform hover:scale-105 transition h-[270px] w-full max-w-[180px]">
                 <img src="{{ movie.poster.url }}" alt="{{ movie.title }}"
                      class="absolute inset-0 w-full h-full object-cover object-top group-hover:opacity-80 transition" />
 
