@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     {% block head %}{% endblock %}
 </head>
-<body class="min-h-screen flex flex-col bg-gray-900 text-gray-100">
+<body class="h-screen flex flex-col bg-gray-900 text-gray-100">
 
     <header class="bg-black bg-opacity-80 border-b border-gray-800 top-0 z-50">
         <div class="w-full px-[30px] py-4 flex justify-between items-center">
@@ -61,7 +61,7 @@
     </ul>
     {% endif %}
 
-    <main class="flex-grow flex flex-col {% block center_content %}{% endblock %}">
+    <main class="flex-1 flex flex-col {% block center_content %}{% endblock %}">
         {% block content %}{% endblock %}
     </main>
 
