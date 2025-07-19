@@ -12,9 +12,8 @@ logger = logging.getLogger(__name__)
 
 @login_required
 def submit_review(request, movie_id):
+    movie = get_object_or_404(Movie, id=movie_id)
     try:
-        movie = get_object_or_404(Movie, id=movie_id)
-
         if request.method == "POST":
             form = ReviewForm(request.POST)
             if form.is_valid():
@@ -24,7 +23,6 @@ def submit_review(request, movie_id):
                         .filter(user=request.user, movie=movie)
                         .first()
                     )
-
                     if existing_review:
                         messages.error(
                             request,
@@ -61,8 +59,12 @@ def delete_review(request, review_id):
             review.delete()
             messages.success(request, "Your comment has been successfully deleted.")
             logger.info("Review deleted successfully")
+            return redirect("movie_detail", movie_id=review.movie.id)
+
     except Exception as e:
         logger.error(f"Error deleting review: {e}")
         messages.error(request, "An error occurred while deleting your review.")
+
+        return redirect("home")
 
     return redirect("movie_detail", movie_id=review.movie.id)
