@@ -16,6 +16,24 @@ class Genre(models.Model):
         return self.name
 
 
+class Country(models.Model):
+    name = models.CharField(max_length=100, blank=False, null=False, unique=True)
+    code = models.CharField(max_length=3, blank=True, null=True, unique=True)  # ISO country code
+
+    class Meta:
+        verbose_name_plural = "Countries"
+
+    def __str__(self):
+        return self.name
+
+
+class Year(models.Model):
+    year = models.IntegerField(validators=[MinValueValidator(1888)], unique=True)
+
+    def __str__(self):
+        return str(self.year)
+
+
 class MovieManager(models.Manager):
     def filter_by_genre(self, queryset, genre_id):
         try:
@@ -31,13 +49,13 @@ class MovieManager(models.Manager):
 
     def filter_by_country(self, queryset, country):
         try:
-            return queryset.filter(country=country)
+            return queryset.filter(country__id=int(country))
         except (ValueError, TypeError):
             return queryset
 
     def filter_by_year(self, queryset, year):
         try:
-            return queryset.filter(year=int(year))
+            return queryset.filter(year__id=int(year))
         except (ValueError, TypeError):
             return queryset
 
@@ -45,7 +63,7 @@ class MovieManager(models.Manager):
         self, genre_id=None, category_id=None, country=None, year=None
     ):
         queryset = (
-            self.get_queryset().select_related("category").prefetch_related("genres")
+            self.get_queryset().select_related("category", "country", "year").prefetch_related("genres")
         )
         if genre_id:
             queryset = self.filter_by_genre(queryset, genre_id)
@@ -61,8 +79,8 @@ class MovieManager(models.Manager):
 class Movie(models.Model):
     title = models.CharField(max_length=255, blank=False, null=False)
     description = models.TextField(blank=False, null=False)
-    year = models.IntegerField(validators=[MinValueValidator(1888)])
-    country = models.CharField(max_length=100, blank=False, null=False)
+    year = models.ForeignKey(Year, on_delete=models.CASCADE, blank=False, null=False)
+    country = models.ForeignKey(Country, on_delete=models.CASCADE, blank=False, null=False)
     duration = models.IntegerField(blank=False, null=False)
     poster = models.ImageField(upload_to="movies/", blank=False, null=False)
     trailer_url = models.URLField(blank=False, null=False)
