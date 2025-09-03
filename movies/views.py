@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Movie, Genre, Category
+from .models import Movie, Genre, Category, Country, Year
 from reviews.models import Review
 from reviews.forms import ReviewForm
 from accounts.models import WatchlistItem
@@ -17,8 +17,8 @@ def movie_list(request):
 
     genres = Genre.objects.all()
     categories = Category.objects.all()
-    years = Movie.objects.values_list("year", flat=True).distinct()
-    countries = Movie.objects.values_list("country", flat=True).distinct()
+    years = Year.objects.all().order_by('-year')
+    countries = Country.objects.all().order_by('name')
 
     return render(
         request,

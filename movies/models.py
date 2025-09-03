@@ -35,25 +35,29 @@ class Year(models.Model):
 
 
 class MovieManager(models.Manager):
-    def filter_by_genre(self, queryset, genre_id):
+    @staticmethod
+    def filter_by_genre(queryset, genre_id):
         try:
             return queryset.filter(genres__id=int(genre_id))
         except (ValueError, TypeError):
             return queryset
 
-    def filter_by_category(self, queryset, category_id):
+    @staticmethod
+    def filter_by_category(queryset, category_id):
         try:
             return queryset.filter(category__id=int(category_id))
         except (ValueError, TypeError):
             return queryset
 
-    def filter_by_country(self, queryset, country):
+    @staticmethod
+    def filter_by_country(queryset, country):
         try:
             return queryset.filter(country__id=int(country))
         except (ValueError, TypeError):
             return queryset
 
-    def filter_by_year(self, queryset, year):
+    @staticmethod
+    def filter_by_year(queryset, year):
         try:
             return queryset.filter(year__id=int(year))
         except (ValueError, TypeError):
