@@ -1,19 +1,26 @@
 FROM python:3.12-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+    PYTHONUNBUFFERED=1 \
+    PATH="/opt/venv/bin:$PATH"
 
-RUN apt-get update && apt-get install -y \
-    libpq-dev \
-    gcc \
-    build-essential \
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libpq-dev gcc build-essential \
     && rm -rf /var/lib/apt/lists/*
+
+
+RUN python -m venv /opt/venv && /opt/venv/bin/pip install --upgrade pip
 
 WORKDIR /code
 
+
 COPY requirements.txt /code/
-RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
 
 COPY . /code/
+
+EXPOSE 8000
 
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
