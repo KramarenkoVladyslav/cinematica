@@ -38,7 +38,9 @@ class MovieModelTests(TestCase):
 
         # Create a temporary file for testing
         poster_file = SimpleUploadedFile(
-            name="test_poster.jpg", content=b"fake-image-bytes", content_type="image/jpeg"
+            name="test_poster.jpg",
+            content=b"fake-image-bytes",
+            content_type="image/jpeg",
         )
 
         movie = Movie.objects.create(

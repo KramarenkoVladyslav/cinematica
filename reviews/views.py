@@ -10,6 +10,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 @login_required
 def submit_review(request, movie_id):
     movie = get_object_or_404(Movie, id=movie_id)
@@ -37,7 +38,9 @@ def submit_review(request, movie_id):
                         rating=form.cleaned_data["rating"],
                         review_text=form.cleaned_data["review_text"],
                     )
-                    messages.success(request, "Your comment has been successfully added.")
+                    messages.success(
+                        request, "Your comment has been successfully added."
+                    )
                     logger.info("Review submitted successfully")
     except Exception as e:
         logger.error(f"Error submitting review: {e}")

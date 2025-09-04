@@ -6,19 +6,19 @@ from accounts.models import WatchlistItem
 
 
 def movie_list(request):
-    genre_id = request.GET.get("genre")
-    category_id = request.GET.get("category")
+    genre = request.GET.get("genre")
+    category = request.GET.get("category")
     country = request.GET.get("country")
     year = request.GET.get("year")
 
     movies = Movie.objects.apply_all_filters(
-        genre_id=genre_id, category_id=category_id, country=country, year=year
+        genre_name=genre, category_name=category, country_name=country, year=year
     )
 
     genres = Genre.objects.all()
     categories = Category.objects.all()
-    years = Year.objects.all().order_by('-year')
-    countries = Country.objects.all().order_by('name')
+    years = Year.objects.all().order_by("-year")
+    countries = Country.objects.all().order_by("name")
 
     return render(
         request,

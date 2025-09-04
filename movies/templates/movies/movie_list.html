@@ -20,7 +20,7 @@
                 <select name="genre" id="genre" class="w-full px-3 py-2 bg-gray-800 text-white border border-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-red-600">
                     <option value="">All Genres</option>
                     {% for genre in genres %}
-                        <option value="{{ genre.id }}" {% if genre.id|stringformat:"s" == request.GET.genre %}selected{% endif %}>{{ genre.name }}</option>
+                        <option value="{{ genre.name }}" {% if genre.name == request.GET.genre %}selected{% endif %}>{{ genre.name }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -31,7 +31,7 @@
                 <select name="category" id="category" class="w-full px-3 py-2 bg-gray-800 text-white border border-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-red-600">
                     <option value="">All Categories</option>
                     {% for category in categories %}
-                        <option value="{{ category.id }}" {% if category.id|stringformat:"s" == request.GET.category %}selected{% endif %}>{{ category.name }}</option>
+                        <option value="{{ category.name }}" {% if category.name == request.GET.category %}selected{% endif %}>{{ category.name }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -42,7 +42,7 @@
                 <select name="country" id="country" class="w-full px-3 py-2 bg-gray-800 text-white border border-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-red-600">
                     <option value="">All Countries</option>
                     {% for c in countries %}
-                        <option value="{{ c }}" {% if c|stringformat:"s" == request.GET.country %}selected{% endif %}>{{ c }}</option>
+                        <option value="{{ c.name }}" {% if c.name == request.GET.country %}selected{% endif %}>{{ c.name }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -53,7 +53,7 @@
                 <select name="year" id="year" class="w-full px-3 py-2 bg-gray-800 text-white border border-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-red-600">
                     <option value="">All Years</option>
                     {% for y in years %}
-                        <option value="{{ y }}" {% if y|stringformat:"s" == request.GET.year %}selected{% endif %}>{{ y }}</option>
+                        <option value="{{ y.year }}" {% if y.year|stringformat:"s" == request.GET.year %}selected{% endif %}>{{ y.year }}</option>
                     {% endfor %}
                 </select>
             </div>
