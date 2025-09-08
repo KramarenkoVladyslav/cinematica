@@ -41,9 +41,12 @@ def movie_detail(request, movie_id):
         .order_by("-created_at")
     )
     form = ReviewForm()
-    watchlist_items = WatchlistItem.objects.filter(user=request.user).values_list(
-        "movie_id", flat=True
-    )
+    if request.user.is_authenticated:
+        watchlist_items = WatchlistItem.objects.filter(user=request.user).values_list(
+            "movie_id", flat=True
+        )
+    else:
+        watchlist_items = []
 
     return render(
         request,
