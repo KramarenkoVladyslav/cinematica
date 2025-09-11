@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login
 from .forms import SignupForm
@@ -16,15 +17,22 @@ def home(request):
 
 def signup(request):
     if request.method == "POST":
-        try:
-            form = SignupForm(request.POST)
-            if form.is_valid():
-                user = form.save()
-                login(request, user)
-                return redirect("home")
-        except Exception as e:
-            print(e)
+        form = SignupForm(request.POST)
+        if form.is_valid():
+            try:
+                with transaction.atomic():
+                    user = form.save()
+                    login(request, user)
 
+                return redirect("home")
+
+            except Exception as e:
+                logger.error(f"Error during signup: {e}")
+                messages.error(request, "An error occurred during registration.")
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field}: {error}")
     else:
         form = SignupForm()
 
@@ -33,24 +41,45 @@ def signup(request):
 
 @login_required
 def add_to_watchlist(request, movie_id):
+    movie = get_object_or_404(Movie, id=movie_id)
+
     try:
-        movie = get_object_or_404(Movie, id=movie_id)
-        WatchlistItem.objects.get_or_create(user=request.user, movie=movie)
-        messages.success(request, f"{movie.title} has been added to your watchlist.")
-        logger.info("User successfully added to watchlist")
+        with transaction.atomic():
+            watchlist_item, created = WatchlistItem.objects.select_for_update().get_or_create(
+                user=request.user,
+                movie=movie
+            )
+
+            if created:
+                messages.success(request, f"{movie.title} has been added to your watchlist.")
+                logger.info("User successfully added to watchlist")
+            else:
+                messages.info(request, f"{movie.title} is already in your watchlist.")
+
     except Exception as e:
         logger.error(f"Error adding to watchlist: {e}")
         messages.error(request, "An error occurred while adding to your watchlist.")
+
     return redirect("movie_detail", movie_id=movie.id)
 
 
 @login_required
 def remove_from_watchlist(request, movie_id):
+    movie = get_object_or_404(Movie, id=movie_id)
+
     try:
-        movie = get_object_or_404(Movie, id=movie_id)
-        WatchlistItem.objects.filter(user=request.user, movie=movie).delete()
-        messages.error(request, f"{movie.title} has been removed from your watchlist.")
-        logger.info("User successfully removed from watchlist")
+        with transaction.atomic():
+            watchlist_item = WatchlistItem.objects.select_for_update().filter(
+                user=request.user, movie=movie
+            ).first()
+
+            if watchlist_item:
+                watchlist_item.delete()
+                messages.success(request, f"{movie.title} has been removed from your watchlist.")
+                logger.info("User successfully removed from watchlist")
+            else:
+                messages.info(request, f"{movie.title} was not in your watchlist.")
+
     except Exception as e:
         logger.error(f"Error removing from watchlist: {e}")
         messages.error(request, "An error occurred while removing from your watchlist.")
