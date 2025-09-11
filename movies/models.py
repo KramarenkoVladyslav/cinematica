@@ -1,9 +1,19 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.core.validators import MinValueValidator
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from django.db.models.manager import Manager
+
+User = get_user_model()
 
 
 class Category(models.Model):
     name = models.CharField(max_length=100, blank=False, null=False, unique=True)
+
+    # Type hint for IDE support
+    objects: "Manager[Category]"
 
     def __str__(self):
         return self.name
@@ -11,6 +21,8 @@ class Category(models.Model):
 
 class Genre(models.Model):
     name = models.CharField(max_length=100, blank=False, null=False, unique=True)
+
+    objects: "Manager[Genre]"
 
     def __str__(self):
         return self.name
@@ -22,6 +34,8 @@ class Country(models.Model):
         max_length=3, blank=True, null=True, unique=True
     )  # ISO country code
 
+    objects: "Manager[Country]"
+
     class Meta:
         verbose_name_plural = "Countries"
 
@@ -31,6 +45,8 @@ class Country(models.Model):
 
 class Year(models.Model):
     year = models.IntegerField(validators=[MinValueValidator(1888)], unique=True)
+
+    objects: "Manager[Year]"
 
     def __str__(self):
         return str(self.year)
@@ -111,3 +127,15 @@ class Movie(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class WatchlistItem(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("user", "movie")
+
+    def __str__(self):
+        return f"{self.user.username} - {self.movie.title}"

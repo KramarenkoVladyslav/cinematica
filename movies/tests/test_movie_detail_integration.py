@@ -31,6 +31,7 @@ class MovieDetailIntegrationTests(TestCase):
     - 404 handling for non-existent movie IDs
     - Edge cases for duration formatting
     """
+
     @classmethod
     def setUpTestData(cls):
         # Create test data
@@ -62,13 +63,13 @@ class MovieDetailIntegrationTests(TestCase):
             movie=cls.movie,
             user=cls.user,
             review_text="Great movie with excellent action scenes!",
-            rating=5
+            rating=5,
         )
         cls.review2 = Review.objects.create(
             movie=cls.movie,
             user=cls.other_user,
             review_text="Ok movie, but could be better",
-            rating=3
+            rating=3,
         )
 
         # Create watchlist item for one user
@@ -133,13 +134,13 @@ class MovieDetailIntegrationTests(TestCase):
         resp = self.client.get(url)
 
         # Verify context contains expected data
-        self.assertEqual(resp.context['movie'], self.movie)
-        self.assertIn('reviews', resp.context)
-        self.assertIn('form', resp.context)
-        self.assertIn('watchlist_items', resp.context)
+        self.assertEqual(resp.context["movie"], self.movie)
+        self.assertIn("reviews", resp.context)
+        self.assertIn("form", resp.context)
+        self.assertIn("watchlist_items", resp.context)
 
         # Verify reviews are ordered by created_at descending
-        reviews = resp.context['reviews']
+        reviews = resp.context["reviews"]
         self.assertGreaterEqual(len(reviews), 2)
 
     def test_watchlist_button_for_user_with_item_in_watchlist(self):
@@ -153,7 +154,7 @@ class MovieDetailIntegrationTests(TestCase):
         self.assertNotContains(resp, ">Add to Watchlist<")
 
         # Verify watchlist_items contains this movie's ID
-        self.assertIn(self.movie.id, resp.context['watchlist_items'])
+        self.assertIn(self.movie.id, resp.context["watchlist_items"])
 
     def test_watchlist_button_for_user_without_item_in_watchlist(self):
         """Test that users without movie in watchlist see 'Add' button"""
@@ -166,7 +167,7 @@ class MovieDetailIntegrationTests(TestCase):
         self.assertNotContains(resp, ">Remove from Watchlist<")
 
         # Verify watchlist_items doesn't contain this movie's ID
-        self.assertNotIn(self.movie.id, resp.context['watchlist_items'])
+        self.assertNotIn(self.movie.id, resp.context["watchlist_items"])
 
     def test_movie_detail_with_different_user_watchlist(self):
         """Test watchlist functionality for user with different movies in watchlist"""
@@ -180,8 +181,8 @@ class MovieDetailIntegrationTests(TestCase):
         # Should see Add button for this movie (not in watchlist)
         self.assertContains(resp, ">Add to Watchlist<")
         # Verify watchlist contains the other movie but not this one
-        self.assertIn(self.movie2.id, resp.context['watchlist_items'])
-        self.assertNotIn(self.movie.id, resp.context['watchlist_items'])
+        self.assertIn(self.movie2.id, resp.context["watchlist_items"])
+        self.assertNotIn(self.movie.id, resp.context["watchlist_items"])
 
     def test_movie_detail_nonexistent_movie_returns_404(self):
         """Test that requesting non-existent movie returns 404"""
@@ -198,7 +199,7 @@ class MovieDetailIntegrationTests(TestCase):
         self.assertContains(resp, self.movie2.title)
 
         # Verify no reviews are displayed
-        reviews = resp.context['reviews']
+        reviews = resp.context["reviews"]
         self.assertEqual(len(reviews), 0)
 
     def test_movie_detail_form_present_for_authenticated_user(self):
@@ -208,8 +209,8 @@ class MovieDetailIntegrationTests(TestCase):
         resp = self.client.get(url)
 
         # Verify form is in context and rendered
-        self.assertIn('form', resp.context)
-        self.assertIsNotNone(resp.context['form'])
+        self.assertIn("form", resp.context)
+        self.assertIsNotNone(resp.context["form"])
 
     def test_movie_detail_displays_all_genres(self):
         """Test that all movie genres are displayed"""

@@ -104,7 +104,8 @@ class MovieListIntegrationTests(TestCase):
         """All matching filters combined should still return only Movie 1."""
         url = reverse("movie_list")
         resp = self.client.get(
-            url, {"genre": "Action", "country": "USA", "category": "Film", "year": "2023"}
+            url,
+            {"genre": "Action", "country": "USA", "category": "Film", "year": "2023"},
         )
         self.assertContains(resp, "Movie 1")
         self.assertNotContains(resp, "Movie 2")

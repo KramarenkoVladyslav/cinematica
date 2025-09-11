@@ -45,7 +45,9 @@ def submit_review(request, movie_id):
 
             except Exception as e:
                 logger.error(f"Error submitting review: {e}")
-                messages.error(request, "An error occurred while submitting your review.")
+                messages.error(
+                    request, "An error occurred while submitting your review."
+                )
 
     return redirect("movie_detail", movie_id=movie.id)
 
