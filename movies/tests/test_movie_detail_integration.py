@@ -3,9 +3,8 @@ from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.auth import get_user_model
 
-from movies.models import Movie, Genre, Category, Country, Year
+from movies.models import Movie, Genre, Category, Country, Year, WatchlistItem
 from reviews.models import Review
-from accounts.models import WatchlistItem
 
 User = get_user_model()
 TEST_MEDIA_ROOT = "/tmp/test_media_movies"
