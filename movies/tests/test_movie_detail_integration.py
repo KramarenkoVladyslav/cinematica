@@ -3,9 +3,8 @@ from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.auth import get_user_model
 
-from movies.models import Movie, Genre, Category, Country, Year
+from movies.models import Movie, Genre, Category, Country, Year, WatchlistItem
 from reviews.models import Review
-from accounts.models import WatchlistItem
 
 User = get_user_model()
 TEST_MEDIA_ROOT = "/tmp/test_media_movies"
@@ -124,9 +123,6 @@ class MovieDetailIntegrationTests(TestCase):
         # Verify usernames are shown
         self.assertContains(resp, self.user.username)
         self.assertContains(resp, self.other_user.username)
-
-        # Verify ratings are displayed (this depends on template implementation)
-        # You might need to adjust based on how ratings are displayed in your template
 
     def test_movie_detail_context_data(self):
         """Test that the view passes correct context data to template"""
