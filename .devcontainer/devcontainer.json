@@ -1,0 +1,95 @@
+{
+  // The display name of the dev container
+  "name": "cinematica-backend",
+
+  // Use your existing docker-compose setup
+  "dockerComposeFile": [
+    "../docker-compose.yml"
+  ],
+
+  // The service where development happens (your Django backend)
+  "service": "backend",
+
+  // Where your code is mounted inside the container
+  "workspaceFolder": "/code",
+
+  // Prevents Django from auto-starting (like PyCharm where you control run/debug)
+  "overrideCommand": true,
+
+  // Mount the .git folder into the container so Git integration works inside Cursor
+  "mounts": [
+    "source=${localWorkspaceFolder}/.git,target=/code/.git,type=bind,consistency=cached"
+  ],
+
+  // Automatically install git if missing
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {}
+  },
+
+  // Container-level settings (similar to PyCharm project interpreter settings)
+  "settings": {
+    // --- Python Interpreter ---
+    "python.defaultInterpreterPath": "/opt/venv/bin/python3",
+    "python.analysis.autoImportCompletions": true,
+
+    // --- Testing Configuration ---
+    "python.testing.pytestEnabled": true,
+    "python.testing.unittestEnabled": false,   
+    "python.testing.nosetestsEnabled": false, 
+
+    // Search for tests in project root
+    "python.testing.pytestArgs": ["."],
+    "python.testing.unittestArgs": ["-v", "-s", "."],
+
+    // Auto-discover tests when files change
+    "python.testing.autoTestDiscoverOnSaveEnabled": true,
+
+    // --- Git ---
+    "git.enabled": true
+  },
+
+  // Extensions installed automatically inside the dev container
+  "extensions": [
+    // --- Python / Django ---
+    "ms-python.python",          // Core Python support (run, debug, tests)
+    "ms-python.vscode-pylance",  // IntelliSense and type checking
+    "batisteo.vscode-django",    // Django snippets & template tags
+    "KevinOConnor.vscode-django-debug", // Django debug helpers
+
+    // --- HTML / Templates ---
+    "bibhasdn.django-html",      // Syntax highlighting for Django templates
+
+    // --- Git / VCS ---
+    "eamodio.gitlens",           // Git blame & history inside the editor
+    "mhutchie.git-graph",        // Visualize git branches and merges
+    "donjayamanne.githistory",   // View detailed commit history
+
+    // --- Code Quality ---
+    "charliermarsh.ruff",        // Fast Python linter (flake8/pylint replacement)
+    "ms-python.black-formatter", // Auto-format code with Black
+    "ms-python.isort",           // Organize imports (isort, Black-compatible)
+    "SonarSource.sonarlint-vscode", // Static code analysis (like PyCharm inspections)
+
+    // --- Testing / Coverage ---
+    "littlefoxteam.vscode-python-test-adapter", // Run tests via GUI
+    "ryanluker.vscode-coverage-gutters",        // Show test coverage in code
+
+    // --- Database / ORM ---
+    "cweijan.vscode-database-client2", // Database client (Postgres, MySQL, etc.)
+
+    // --- Docker / Tools ---
+    "ms-azuretools.vscode-docker",     // Docker integration inside IDE
+    "ms-vscode.makefile-tools"         // Makefile support (tasks, builds)
+  ],
+
+  // Forward ports so Django and Postgres are accessible
+  "forwardPorts": [8000, 5432],
+
+  // Add environment variables inside the container
+  "remoteEnv": {
+    "PYTHONPATH": "/code"
+  },
+
+  // Post-create hook: ensures 
+  "postCreateCommand": "bash -lc 'command -v git >/dev/null 2>&1 || (apt-get update && apt-get install -y git && apt-get clean); python -V; pip install -U pip pytest pytest-django'"
+}
