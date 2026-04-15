@@ -119,8 +119,7 @@ def remove_from_watchlist(request, movie_id):
         logger.error(f"Error removing from watchlist: {e}")
         messages.error(request, "An error occurred while removing from your watchlist.")
 
-    next_url = request.POST.get("next", "watchlist")
-    return redirect(next_url)
+    return redirect("watchlist")
 
 
 @login_required
