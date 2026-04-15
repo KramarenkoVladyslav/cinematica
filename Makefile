@@ -1,4 +1,4 @@
-.PHONY: build up down createsuperuser load-fixtures
+.PHONY: build up down createsuperuser load-fixtures test
 
 build:
 	docker compose up --build
@@ -18,3 +18,6 @@ load-fixtures:
 	docker compose exec backend python manage.py loaddata fixtures/movies/countries.json
 	docker compose exec backend python manage.py loaddata fixtures/movies/years.json
 	docker compose exec backend python manage.py loaddata fixtures/movies/movies.json
+
+test:
+	docker compose exec backend python manage.py test --verbosity=2
