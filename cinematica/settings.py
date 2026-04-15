@@ -117,8 +117,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTH_USER_MODEL = "accounts.User"
 
+LOGIN_URL = "login"
 LOGOUT_REDIRECT_URL = "home"
-
 LOGIN_REDIRECT_URL = "home"
 
 LOGGING = {
