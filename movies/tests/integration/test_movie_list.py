@@ -8,9 +8,6 @@ TEST_MEDIA_ROOT = "/tmp/test_media_movies"
 
 
 def _poster(name="p.jpg"):
-    """
-    Helper to create a tiny in-memory fake image file for poster uploads.
-    """
     return SimpleUploadedFile(name, b"\x47\x49\x46", content_type="image/jpeg")
 
 
@@ -34,7 +31,6 @@ class MovieListIntegrationTests(TestCase):
         cls.y2023 = Year.objects.create(year=2023)
         cls.y2024 = Year.objects.create(year=2024)
 
-        # Movie 1
         m1 = Movie.objects.create(
             title="Movie 1",
             description="Some description 1",
@@ -47,7 +43,6 @@ class MovieListIntegrationTests(TestCase):
         )
         m1.genres.add(cls.g_action)
 
-        # Movie 2
         m2 = Movie.objects.create(
             title="Movie 2",
             description="Some description 2",

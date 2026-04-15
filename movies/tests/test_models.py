@@ -1,7 +1,7 @@
 from django.test import TestCase, override_settings
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-from .models import Movie, Category, Genre, Country, Year
+from movies.models import Movie, Category, Genre, Country, Year
 
 TEST_MEDIA_ROOT = "/tmp/test_media_movies_model"
 
