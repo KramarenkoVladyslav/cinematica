@@ -9,16 +9,15 @@ class HomeViewTests(TestCase):
     def setUp(self):
         self.client = Client()
 
-    def test_home_returns_200(self):
+    def test_home_redirects_to_movie_list(self):
         resp = self.client.get(reverse("home"))
-        self.assertEqual(resp.status_code, 200)
-        self.assertTemplateUsed(resp, "home.html")
+        self.assertRedirects(resp, reverse("movie_list"), fetch_redirect_response=False)
 
-    def test_home_accessible_when_authenticated(self):
+    def test_home_redirects_when_authenticated(self):
         User.objects.create_user(username="someone", password="pwd12345")
         self.client.login(username="someone", password="pwd12345")
         resp = self.client.get(reverse("home"))
-        self.assertEqual(resp.status_code, 200)
+        self.assertRedirects(resp, reverse("movie_list"), fetch_redirect_response=False)
 
 
 class SignupViewTests(TestCase):
@@ -42,9 +41,9 @@ class SignupViewTests(TestCase):
         self.client.post(self.url, self.valid_data)
         self.assertTrue(User.objects.filter(username="newuser").exists())
 
-    def test_valid_signup_redirects_to_home(self):
+    def test_valid_signup_redirects_to_movie_list(self):
         resp = self.client.post(self.url, self.valid_data)
-        self.assertRedirects(resp, reverse("home"))
+        self.assertRedirects(resp, reverse("movie_list"), fetch_redirect_response=False)
 
     def test_valid_signup_logs_user_in(self):
         self.client.post(self.url, self.valid_data)

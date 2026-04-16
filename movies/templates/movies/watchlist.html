@@ -3,39 +3,64 @@
 {% block title %}My Watchlist{% endblock %}
 
 {% block content %}
-<div class="w-full px-[30px] pb-[50px]">
-    <h1 class="text-4xl mt-[50px] font-extrabold text-white text-center tracking-wider drop-shadow-lg mb-8">
+<div class="w-full px-[30px] py-10">
+    <h1 class="cinema-title text-5xl md:text-6xl text-white text-center tracking-wide mb-10">
         My Watchlist
     </h1>
 
-    <div class="mt-[50px] grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7 gap-4">
+    {% if watchlist_items %}
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
         {% for item in watchlist_items %}
-            <div class="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 w-full max-w-[180px] mx-auto">
+        <div class="watchlist-card group relative rounded-xl overflow-hidden shadow-lg
+                    hover:shadow-[0_0_28px_rgba(239,68,68,0.35)]
+                    hover:ring-2 hover:ring-red-500/60
+                    transition-all duration-300 aspect-[2/3]">
+
+            <!-- Poster -->
+            <a href="{% url 'movie_detail' item.movie.id %}">
                 <img src="{{ item.movie.poster.url }}" alt="{{ item.movie.title }}"
-                     class="w-full h-64 object-cover object-top">
+                     class="absolute inset-0 w-full h-full object-cover object-top
+                            group-hover:scale-105 transition-transform duration-500" />
+            </a>
 
-                <div class="p-4">
-                    <h2 class="text-base font-semibold text-white truncate">
-                        <a href="{% url 'movie_detail' item.movie.id %}" class="hover:underline">{{ item.movie.title }}</a>
+            <!-- Gradient overlay -->
+            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-90 pointer-events-none"></div>
+
+            <!-- Info + remove button -->
+            <div class="absolute bottom-0 left-0 right-0 p-3 z-10">
+                <a href="{% url 'movie_detail' item.movie.id %}" class="block">
+                    <h2 class="text-sm font-bold text-white leading-tight line-clamp-2 hover:text-red-400 transition">
+                        {{ item.movie.title }}
                     </h2>
-
-                    <form action="{% url 'remove_from_watchlist' item.movie.id %}" method="post" class="mt-2">
-                        {% csrf_token %}
-                        <input type="hidden" name="next" value="{{ request.path }}">
-                        <button type="submit"
-                                class="text-red-600 hover:text-red-400 text-sm"
-                                title="Remove {{ item.movie.title }}"
-                                aria-label="Remove {{ item.movie.title }}">
-                            Remove
-                        </button>
-                    </form>
-                </div>
+                    <p class="text-[11px] text-gray-400 mt-0.5">
+                        {{ item.movie.year }} · {{ item.movie.get_duration_in_hours_and_minutes }}
+                    </p>
+                </a>
+                <form action="{% url 'remove_from_watchlist' item.movie.id %}" method="post"
+                      hx-post="{% url 'remove_from_watchlist' item.movie.id %}"
+                      hx-target="closest .watchlist-card"
+                      hx-swap="outerHTML"
+                      class="mt-2">
+                    {% csrf_token %}
+                    <button type="submit"
+                            class="text-[11px] text-red-500 hover:text-red-400 transition font-semibold"
+                            title="Remove {{ item.movie.title }}">
+                        ✕ Remove
+                    </button>
+                </form>
             </div>
-        {% empty %}
-            <div class="col-span-full text-center text-gray-400">
-                No movies in your watchlist yet.
-            </div>
+        </div>
         {% endfor %}
     </div>
+    {% else %}
+    <div class="flex flex-col items-center justify-center py-32 text-center">
+        <span class="text-6xl mb-4">🎬</span>
+        <p class="text-gray-400 text-lg mb-6">Your watchlist is empty.</p>
+        <a href="{% url 'movie_list' %}"
+           class="px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl transition">
+            Browse Movies
+        </a>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}

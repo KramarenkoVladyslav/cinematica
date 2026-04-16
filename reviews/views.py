@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Review
 from movies.models import Movie
@@ -28,7 +28,8 @@ def submit_review(request, movie_id):
                     if existing_review:
                         messages.error(
                             request,
-                            "You have already submitted a review for this movie. Please delete your existing review before submitting a new one.",
+                            "You have already submitted a review for this movie. Please delete your \
+                            existing review before submitting a new one.",
                         )
                         logger.info("User attempted to submit a duplicate review")
                         return redirect("movie_detail", movie_id=movie.id)

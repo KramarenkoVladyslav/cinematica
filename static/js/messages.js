@@ -1,7 +1,10 @@
-// Function to hide messages after 3 seconds
-setTimeout(() => {
-    const messages = document.querySelectorAll('.messages li');
-    messages.forEach(message => {
-        message.style.display = 'none';
+document.addEventListener('DOMContentLoaded', function () {
+    const toasts = document.querySelectorAll('.toast');
+    toasts.forEach(function (toast) {
+        setTimeout(function () {
+            toast.style.transition = 'opacity 0.4s ease';
+            toast.style.opacity = '0';
+            setTimeout(function () { toast.remove(); }, 400);
+        }, 5000);
     });
-}, 3000);
+});

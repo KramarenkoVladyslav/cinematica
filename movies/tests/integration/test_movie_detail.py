@@ -96,8 +96,8 @@ class MovieDetailIntegrationTests(TestCase):
         self.assertContains(resp, self.genre1.name)
         self.assertContains(resp, self.genre2.name)
         self.assertContains(resp, f'href="{self.movie.trailer_url}"')
-        self.assertContains(resp, ">Add to Watchlist<")
-        self.assertNotContains(resp, ">Remove from Watchlist<")
+        self.assertContains(resp, "Add to Watchlist")
+        self.assertNotContains(resp, "In Watchlist")
 
     def test_movie_detail_contains_all_reviews(self):
         """Test that all reviews are displayed with correct data"""
@@ -123,8 +123,8 @@ class MovieDetailIntegrationTests(TestCase):
         self.client.login(username="john", password="pwd12345")
         url = reverse("movie_detail", args=[self.movie.id])
         resp = self.client.get(url)
-        self.assertContains(resp, ">Remove from Watchlist<")
-        self.assertNotContains(resp, ">Add to Watchlist<")
+        self.assertContains(resp, "In Watchlist")
+        self.assertNotContains(resp, "Add to Watchlist")
         self.assertIn(self.movie.id, resp.context["watchlist_items"])
 
     def test_watchlist_button_for_user_without_item_in_watchlist(self):
@@ -132,8 +132,8 @@ class MovieDetailIntegrationTests(TestCase):
         self.client.login(username="vlad", password="pwd12345")
         url = reverse("movie_detail", args=[self.movie.id])
         resp = self.client.get(url)
-        self.assertContains(resp, ">Add to Watchlist<")
-        self.assertNotContains(resp, ">Remove from Watchlist<")
+        self.assertContains(resp, "Add to Watchlist")
+        self.assertNotContains(resp, "In Watchlist")
         self.assertNotIn(self.movie.id, resp.context["watchlist_items"])
 
     def test_movie_detail_with_different_user_watchlist(self):
@@ -142,7 +142,7 @@ class MovieDetailIntegrationTests(TestCase):
         self.client.login(username="vlad", password="pwd12345")
         url = reverse("movie_detail", args=[self.movie.id])
         resp = self.client.get(url)
-        self.assertContains(resp, ">Add to Watchlist<")
+        self.assertContains(resp, "Add to Watchlist")
         self.assertIn(self.movie2.id, resp.context["watchlist_items"])
         self.assertNotIn(self.movie.id, resp.context["watchlist_items"])
 

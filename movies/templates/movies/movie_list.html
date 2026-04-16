@@ -4,96 +4,298 @@
 {% block title %}Movies{% endblock %}
 
 {% block content %}
-<div class="w-full px-[30px] py-7">
-    <!-- Burger Menu Button -->
-    <button id="burger-menu" class="md:hidden w-full text-left text-gray-400 mb-4 flex items-center">
-        <span class="material-icons">tune</span> 
-        <span class="ml-2">FILTER BY</span>
+
+<!-- Ambient background glow -->
+<div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+    <div class="absolute -top-20 -left-20 w-[500px] h-[400px] bg-red-700/8 rounded-full blur-[140px]"></div>
+    <div class="absolute top-1/2 right-0 w-[300px] h-[400px] bg-red-900/6 rounded-full blur-[120px]"></div>
+</div>
+
+<div class="relative z-10 w-full px-[30px] py-8">
+
+    <!-- Filter bar -->
+    <button id="burger-menu" class="md:hidden w-full text-left text-gray-400 mb-4 flex items-center gap-2">
+        <span class="material-icons text-base">tune</span>
+        <span class="text-xs font-semibold tracking-widest uppercase">Filter By</span>
     </button>
-    
-    <!-- Filters Form -->
-    <form method="get" class="mb-8" id="filters" hx-get="{% url 'movie_list' %}" hx-target="#movie-list">
-        <div class="flex flex-col md:flex-row md:items-end md:space-x-4 space-y-4 md:space-y-0">
+
+    <form method="get" id="filters" hx-get="{% url 'movie_list' %}" hx-target="#movie-list" hx-select="#movie-list" class="mb-10">
+        <div class="flex flex-col md:flex-row md:items-end md:flex-wrap gap-3">
+
             <!-- Genre -->
-            <div class="flex-1">
-                <label for="genre" class="block text-sm font-medium text-gray-400 mb-1">Filter by Genre</label>
-                <select name="genre" id="genre" class="w-full px-3 py-2 bg-gray-800 text-white border border-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-red-600">
-                    <option value="">All Genres</option>
-                    {% for genre in genres %}
-                        <option value="{{ genre.name }}" {% if genre.name == request.GET.genre %}selected{% endif %}>{{ genre.name }}</option>
-                    {% endfor %}
-                </select>
+            <div class="flex-1 min-w-[160px] filter-dropdown" data-name="genre">
+                <label class="block text-[10px] font-bold tracking-[0.2em] uppercase text-gray-500 mb-1.5">Genre</label>
+                <input type="hidden" name="genre" value="{{ request.GET.genre|default:'' }}">
+                <button type="button" class="filter-trigger">
+                    <span class="filter-label{% if request.GET.genre %} has-value{% endif %}">{{ request.GET.genre|default:'All' }}</span>
+                    <svg class="filter-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none">
+                        <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                <div class="filter-panel" style="display:none">
+                    <div class="filter-panel-inner">
+                        <div class="filter-option{% if not request.GET.genre %} active{% endif %}" data-value="">All</div>
+                        {% for genre in genres %}
+                        <div class="filter-option{% if genre.name == request.GET.genre %} active{% endif %}" data-value="{{ genre.name }}">{{ genre.name }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
-    
+
             <!-- Category -->
-            <div class="flex-1">
-                <label for="category" class="block text-sm font-medium text-gray-400 mb-1">Filter by Category</label>
-                <select name="category" id="category" class="w-full px-3 py-2 bg-gray-800 text-white border border-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-red-600">
-                    <option value="">All Categories</option>
-                    {% for category in categories %}
-                        <option value="{{ category.name }}" {% if category.name == request.GET.category %}selected{% endif %}>{{ category.name }}</option>
-                    {% endfor %}
-                </select>
+            <div class="flex-1 min-w-[160px] filter-dropdown" data-name="category">
+                <label class="block text-[10px] font-bold tracking-[0.2em] uppercase text-gray-500 mb-1.5">Category</label>
+                <input type="hidden" name="category" value="{{ request.GET.category|default:'' }}">
+                <button type="button" class="filter-trigger">
+                    <span class="filter-label{% if request.GET.category %} has-value{% endif %}">{{ request.GET.category|default:'All' }}</span>
+                    <svg class="filter-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none">
+                        <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                <div class="filter-panel" style="display:none">
+                    <div class="filter-panel-inner">
+                        <div class="filter-option{% if not request.GET.category %} active{% endif %}" data-value="">All</div>
+                        {% for category in categories %}
+                        <div class="filter-option{% if category.name == request.GET.category %} active{% endif %}" data-value="{{ category.name }}">{{ category.name }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
 
             <!-- Country -->
-            <div class="flex-1">
-                <label for="country" class="block text-sm font-medium text-gray-400 mb-1">Filter by Country</label>
-                <select name="country" id="country" class="w-full px-3 py-2 bg-gray-800 text-white border border-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-red-600">
-                    <option value="">All Countries</option>
-                    {% for c in countries %}
-                        <option value="{{ c.name }}" {% if c.name == request.GET.country %}selected{% endif %}>{{ c.name }}</option>
-                    {% endfor %}
-                </select>
+            <div class="flex-1 min-w-[160px] filter-dropdown" data-name="country">
+                <label class="block text-[10px] font-bold tracking-[0.2em] uppercase text-gray-500 mb-1.5">Country</label>
+                <input type="hidden" name="country" value="{{ request.GET.country|default:'' }}">
+                <button type="button" class="filter-trigger">
+                    <span class="filter-label{% if request.GET.country %} has-value{% endif %}">{{ request.GET.country|default:'All' }}</span>
+                    <svg class="filter-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none">
+                        <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                <div class="filter-panel" style="display:none">
+                    <div class="filter-panel-inner">
+                        <div class="filter-option{% if not request.GET.country %} active{% endif %}" data-value="">All</div>
+                        {% for c in countries %}
+                        <div class="filter-option{% if c.name == request.GET.country %} active{% endif %}" data-value="{{ c.name }}">{{ c.name }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
 
             <!-- Year -->
-            <div class="flex-1">
-                <label for="year" class="block text-sm font-medium text-gray-400 mb-1">Filter by Year</label>
-                <select name="year" id="year" class="w-full px-3 py-2 bg-gray-800 text-white border border-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-red-600">
-                    <option value="">All Years</option>
-                    {% for y in years %}
-                        <option value="{{ y.year }}" {% if y.year|stringformat:"s" == request.GET.year %}selected{% endif %}>{{ y.year }}</option>
-                    {% endfor %}
-                </select>
+            <div class="flex-1 min-w-[160px] filter-dropdown" data-name="year">
+                <label class="block text-[10px] font-bold tracking-[0.2em] uppercase text-gray-500 mb-1.5">Year</label>
+                <input type="hidden" name="year" value="{{ request.GET.year|default:'' }}">
+                <button type="button" class="filter-trigger">
+                    <span class="filter-label{% if request.GET.year %} has-value{% endif %}">{{ request.GET.year|default:'All' }}</span>
+                    <svg class="filter-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none">
+                        <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                <div class="filter-panel" style="display:none">
+                    <div class="filter-panel-inner">
+                        <div class="filter-option{% if not request.GET.year %} active{% endif %}" data-value="">All</div>
+                        {% for y in years %}
+                        <div class="filter-option{% if y.year|stringformat:'s' == request.GET.year %} active{% endif %}" data-value="{{ y.year }}">{{ y.year }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
 
-            <!-- Clear Filters Button -->
-            <button type="button" id="clear-filters" class="mt-4 px-3 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition">
-                Clear
-            </button>
+            <!-- Clear button -->
+            <div class="flex items-end">
+                <button type="button" id="clear-filters"
+                        class="group flex items-center gap-1.5 px-4 py-2.5 text-[10px] font-bold tracking-[0.2em] uppercase text-gray-600 hover:text-red-500 transition-colors duration-200">
+                    <svg class="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                    Clear
+                </button>
+            </div>
         </div>
     </form>
 
+    <!-- Content -->
     <div id="movie-list">
         {% if movies %}
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7 gap-4 justify-items-start">
-            {% for movie in movies %}
-            <div class="relative bg-gray-900 rounded-lg overflow-hidden shadow-lg group transform hover:scale-105 transition h-[270px] w-full max-w-[180px]">
-                <img src="{{ movie.poster.url }}" alt="{{ movie.title }}"
-                     class="absolute inset-0 w-full h-full object-cover object-top group-hover:opacity-80 transition" />
 
-                <div class="absolute bottom-0 left-0 right-0 h-[55%] bg-gradient-to-t from-black via-black/80 to-transparent z-10"></div>
+        <!-- HERO — visible only when no filters are active -->
+        {% if not request.GET.genre and not request.GET.category and not request.GET.country and not request.GET.year %}
+        {% with hero=movies|first %}
+        <a href="{% url 'movie_detail' hero.id %}"
+           class="group relative flex items-center w-full rounded-2xl overflow-hidden mb-12 cursor-pointer"
+           style="min-height: 420px; box-shadow: 0 32px 80px -12px rgba(0,0,0,0.9), 0 8px 24px -4px rgba(0,0,0,0.6);">
 
-                <div class="absolute bottom-0 z-20 p-3 w-full">
-                    <h2 class="text-sm font-bold text-white leading-tight truncate">{{ movie.title }}</h2>
-                    <p class="text-xs text-gray-300 mt-1 truncate">{{ movie.year }} • {{ movie.country }}</p>
-                    <p class="text-[11px] text-gray-400">{{ movie.get_duration_in_hours_and_minutes }}</p>
-
-                    <a href="{% url 'movie_detail' movie.id %}"
-                       title="View {{ movie.title }}" aria-label="View {{ movie.title }}"
-                       class="inline-block mt-2 px-2 py-1 bg-red-600 text-white text-xs rounded hover:bg-red-700 transition">
-                        View →
-                    </a>
-                </div>
+            <!-- Atmospheric background -->
+            <div class="absolute inset-0 bg-black overflow-hidden">
+                <!-- Full-bleed blurred poster -->
+                <img src="{{ hero.poster.url }}" alt=""
+                     class="hero-bg-img absolute inset-0 w-full h-full object-cover object-center"
+                     style="opacity: 0.65; filter: blur(48px) brightness(1.3) saturate(1.2);" />
+                <!-- Heavy left vignette for text readability -->
+                <div class="absolute inset-0 bg-gradient-to-r from-black/95 via-black/70 to-black/30"></div>
+                <!-- Right edge fade -->
+                <div class="absolute inset-0 bg-gradient-to-l from-black/60 to-transparent"></div>
+                <!-- Top vignette -->
+                <div class="absolute inset-0 bg-gradient-to-b from-black/70 via-transparent to-black/80"></div>
+                <!-- Centre depth -->
+                <div class="absolute inset-0"
+                     style="background: radial-gradient(ellipse 120% 100% at 50% 50%, transparent 30%, rgba(0,0,0,0.5) 100%);"></div>
             </div>
+
+            <!-- Bottom depth shadow -->
+            <div class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black to-transparent"></div>
+
+            <!-- Layout: text left, poster right -->
+            <div class="relative z-10 flex items-center justify-between w-full px-8 md:px-14 py-10 gap-8">
+
+                <!-- Left: Info -->
+                <div class="flex-1 max-w-xl">
+                    <span class="inline-flex items-center gap-1.5 text-[10px] font-bold tracking-[0.28em] uppercase text-red-500 mb-5">
+                        <span class="w-4 h-[2px] bg-red-500 inline-block rounded"></span>
+                        Featured Film
+                    </span>
+
+                    <h2 class="cinema-title text-5xl md:text-7xl text-white leading-none mb-3">
+                        {{ hero.title }}
+                    </h2>
+
+                    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-gray-400 mb-4">
+                        <span>{{ hero.year }}</span>
+                        <span class="w-1 h-1 rounded-full bg-gray-700 inline-block"></span>
+                        <span>{{ hero.country }}</span>
+                        <span class="w-1 h-1 rounded-full bg-gray-700 inline-block"></span>
+                        <span>{{ hero.get_duration_in_hours_and_minutes }}</span>
+                        {% if hero.category %}
+                        <span class="w-1 h-1 rounded-full bg-gray-700 inline-block"></span>
+                        <span>{{ hero.category }}</span>
+                        {% endif %}
+                    </div>
+
+                    {% if hero.genres.all %}
+                    <div class="flex flex-wrap gap-2 mb-5">
+                        {% for genre in hero.genres.all %}
+                            <span class="px-3 py-0.5 bg-white/10 border border-white/15
+                                         text-gray-300 text-xs rounded-full">{{ genre.name }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <p class="text-sm text-gray-400 line-clamp-2 mb-7 leading-relaxed">{{ hero.description }}</p>
+
+                    <span class="inline-flex items-center gap-2 px-6 py-3 bg-red-600 group-hover:bg-red-700
+                                 text-white text-sm font-bold rounded-xl transition-colors duration-200
+                                 shadow-lg shadow-red-900/40">
+                        View Details
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </span>
+                </div>
+
+                <!-- Right: Portrait poster card -->
+                <div class="hidden md:block shrink-0 w-44 lg:w-52 xl:w-60">
+                    <div class="relative">
+                        <div class="absolute inset-0 rounded-xl bg-red-600/20 blur-2xl -z-10 scale-90 translate-y-4"></div>
+                        <img src="{{ hero.poster.url }}" alt="{{ hero.title }}"
+                             class="w-full rounded-xl ring-1 ring-white/10
+                                    shadow-[0_20px_60px_rgba(0,0,0,0.9)]
+                                    group-hover:scale-[1.02] transition-transform duration-500" />
+                    </div>
+                </div>
+
+            </div>
+        </a>
+        {% endwith %}
+        {% endif %}
+
+        <!-- Section header -->
+        <div class="flex items-center gap-3 mb-6">
+            <div class="w-[3px] h-6 bg-red-600 rounded-full"></div>
+            <h2 class="cinema-title text-2xl text-white tracking-wider">
+                {% if request.GET.genre or request.GET.category or request.GET.country or request.GET.year %}
+                    Search Results
+                {% else %}
+                    All Films
+                {% endif %}
+            </h2>
+        </div>
+
+        <!-- Movie grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+            {% for movie in movies %}
+            {% if forloop.first and not request.GET.genre and not request.GET.category and not request.GET.country and not request.GET.year %}{% else %}
+            <a href="{% url 'movie_detail' movie.id %}"
+               class="group relative block rounded-xl overflow-hidden aspect-[2/3]
+                      ring-1 ring-white/5
+                      hover:ring-2 hover:ring-red-500/60
+                      hover:shadow-[0_0_40px_rgba(239,68,68,0.35)]
+                      transition-all duration-300">
+
+                <!-- Poster -->
+                <img src="{{ movie.poster.url }}" alt="{{ movie.title }}"
+                     class="absolute inset-0 w-full h-full object-cover object-top
+                            group-hover:scale-105 transition-transform duration-500 ease-out" />
+
+                <!-- Base gradient for title readability -->
+                <div class="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent"></div>
+
+                <!-- Hover overlay: description + genres -->
+                <div class="absolute inset-0 bg-black/80 backdrop-blur-[2px]
+                            opacity-0 group-hover:opacity-100
+                            transition-opacity duration-300
+                            flex flex-col justify-center p-3 z-20">
+                    {% if movie.genres.all %}
+                    <div class="flex flex-wrap gap-1 mb-2.5">
+                        {% for genre in movie.genres.all|slice:":3" %}
+                            <span class="text-[9px] px-1.5 py-0.5 bg-red-600 text-white
+                                         rounded font-bold uppercase tracking-wide">{{ genre.name }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    <p class="text-[11px] text-gray-200 line-clamp-5 leading-relaxed">{{ movie.description }}</p>
+                </div>
+
+                <!-- Bottom info (fades on hover) -->
+                <div class="absolute bottom-0 left-0 right-0 p-3 z-10
+                            group-hover:opacity-0 transition-opacity duration-300">
+                    <h2 class="text-sm font-bold text-white leading-tight line-clamp-2">{{ movie.title }}</h2>
+                    <div class="flex items-center gap-2 mt-1">
+                        <span class="text-[11px] text-gray-400">{{ movie.year }}</span>
+                        <span class="text-gray-700 text-[9px]">·</span>
+                        <span class="text-[11px] text-gray-400">{{ movie.get_duration_in_hours_and_minutes }}</span>
+                    </div>
+                    {% if movie.review_count > 0 %}
+                    <p class="text-[11px] text-yellow-400 mt-0.5">★ {{ movie.review_count }}</p>
+                    {% endif %}
+                </div>
+            </a>
+            {% endif %}
             {% endfor %}
         </div>
+
         {% else %}
-            <p class="text-gray-400">No movies available at the moment.</p>
+
+        <!-- Empty state -->
+        <div class="flex flex-col items-center justify-center min-h-[60vh] text-center">
+            <div class="w-20 h-20 rounded-full bg-gray-800/60 border border-gray-700 flex items-center justify-center mb-5">
+                <span class="material-icons text-gray-600 text-4xl">movie_filter</span>
+            </div>
+            <p class="text-white font-semibold text-lg mb-1">No films found</p>
+            {% if has_any_movies %}
+            <p class="text-gray-500 text-sm mb-7">Adjust your filters to discover something to watch.</p>
+            <a href="{% url 'movie_list' %}"
+               class="px-6 py-2.5 border border-gray-700 hover:border-red-600 hover:text-red-500
+                      text-gray-400 text-sm rounded-lg transition">
+                Clear Filters
+            </a>
+            {% endif %}
+        </div>
+
         {% endif %}
     </div>
+
 </div>
 
-<script src="{% static 'js/filters.js' %}"></script>
+<script src="{% static 'js/filters.js' %}?v=2"></script>
 {% endblock %}

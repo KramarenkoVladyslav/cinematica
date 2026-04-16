@@ -3,6 +3,7 @@ from django.contrib import messages
 import logging
 
 from django.db import transaction
+from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Movie, Genre, Category, Country, Year, WatchlistItem
 from reviews.models import Review
@@ -26,6 +27,8 @@ def movie_list(request):
     years = Year.objects.all().order_by("-year")
     countries = Country.objects.all().order_by("name")
 
+    has_any_movies = Movie.objects.exists()
+
     return render(
         request,
         "movies/movie_list.html",
@@ -35,6 +38,7 @@ def movie_list(request):
             "categories": categories,
             "years": years,
             "countries": countries,
+            "has_any_movies": has_any_movies,
         },
     )
 
@@ -119,7 +123,10 @@ def remove_from_watchlist(request, movie_id):
         logger.error(f"Error removing from watchlist: {e}")
         messages.error(request, "An error occurred while removing from your watchlist.")
 
-    return redirect("watchlist")
+    if request.headers.get("HX-Request"):
+        return HttpResponse("")
+
+    return redirect("movie_detail", movie_id=movie_id)
 
 
 @login_required

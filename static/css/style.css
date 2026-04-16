@@ -1,24 +1,185 @@
 body {
     font-family: 'Inter', sans-serif;
+    background-color: #0a0a0a;
+}
+
+/* Ken Burns — slow ambient zoom on hero bg */
+@keyframes hero-drift {
+    0%   { transform: scale(1.3)   translate3d(0, 0, 0); }
+    100% { transform: scale(1.36)  translate3d(-12px, 0, 0); }
+}
+.hero-bg-img {
+    animation: hero-drift 12s ease-out forwards;
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    image-rendering: auto;
+}
+
+/* Header */
+header {
+    border-bottom: none !important;
+    background: linear-gradient(to right, #0f0000 0%, #080000 20%, #030000 45%, #000000 100%) !important;
+    box-shadow: 0 4px 32px rgba(0,0,0,0.8);
+}
+
+footer {
+    border-top: none !important;
+    position: relative;
+}
+footer::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent 0%, rgba(220,38,38,0.3) 30%, rgba(220,38,38,0.1) 70%, transparent 100%);
+}
+
+/* ── Custom filter dropdowns ── */
+.filter-dropdown {
+    position: relative;
+}
+
+.filter-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #e5e7eb;
+    background: linear-gradient(135deg, rgba(20, 20, 20, 0.95), rgba(12, 12, 12, 0.95));
+    border: 1px solid rgba(127, 29, 29, 0.25);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+.filter-trigger:hover {
+    border-color: rgba(220, 38, 38, 0.5);
+    background: linear-gradient(135deg, rgba(28, 12, 12, 0.95), rgba(16, 8, 8, 0.95));
+    box-shadow: 0 0 20px rgba(220, 38, 38, 0.08);
+}
+.filter-dropdown.open .filter-trigger {
+    border-color: #dc2626;
+    box-shadow: 0 0 24px rgba(220, 38, 38, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+.filter-trigger .filter-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.filter-trigger .filter-label.has-value {
+    color: #fff;
+}
+
+.filter-chevron {
+    color: #4b5563;
+    flex-shrink: 0;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.2s;
+}
+.filter-dropdown.open .filter-chevron {
+    transform: rotate(180deg);
+    color: #dc2626;
+}
+
+/* Dropdown panel */
+.filter-panel {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    min-width: 100%;
+    z-index: 50;
+}
+
+.filter-panel-inner {
+    background: linear-gradient(180deg, rgba(18, 18, 18, 0.98), rgba(10, 10, 10, 0.98));
+    border: 1px solid rgba(127, 29, 29, 0.3);
+    border-radius: 12px;
+    padding: 8px;
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    box-shadow:
+        0 24px 48px rgba(0, 0, 0, 0.6),
+        0 8px 16px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    max-height: 490px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+/* Scrollbar */
+.filter-panel-inner::-webkit-scrollbar {
+    width: 5px;
+}
+.filter-panel-inner::-webkit-scrollbar-track {
+    background: transparent;
+}
+.filter-panel-inner::-webkit-scrollbar-thumb {
+    background: rgba(220, 38, 38, 0.3);
+    border-radius: 4px;
+}
+.filter-panel-inner::-webkit-scrollbar-thumb:hover {
+    background: rgba(220, 38, 38, 0.5);
+}
+
+/* Options */
+.filter-option {
+    padding: 10px 14px;
+    font-size: 14px;
+    color: #9ca3af;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    position: relative;
+}
+.filter-option:hover {
+    color: #fff;
+    background: rgba(220, 38, 38, 0.1);
+}
+.filter-option.active {
+    color: #fff;
+    background: rgba(220, 38, 38, 0.15);
+}
+.filter-option.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 16px;
+    background: #dc2626;
+    border-radius: 0 3px 3px 0;
+}
+
+.cinema-title {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.05em;
 }
 
 .logo {
     width: 135px;
-    height: auto; 
+    height: auto;
 }
 
+
+/* Responsive filters */
 @media (max-width: 767px) {
     #filters {
-        display: none; 
+        display: none;
     }
     #burger-menu {
-        display: flex; 
+        display: flex;
     }
 }
 
 @media (min-width: 768px) {
     #filters {
-        display: block !important; 
+        display: block !important;
     }
     #burger-menu {
         display: none;

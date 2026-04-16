@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 def home(request):
-    return render(request, "home.html")
+    return redirect("movie_list")
 
 
 def signup(request):
@@ -21,7 +21,7 @@ def signup(request):
                     user = form.save()
                     login(request, user)
 
-                return redirect("home")
+                return redirect("movie_list")
 
             except Exception as e:
                 logger.error(f"Error during signup: {e}")
